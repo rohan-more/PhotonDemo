@@ -11,6 +11,11 @@ namespace Core.UI
     {
         [SerializeField] private List<Tab> tabs;
 
+        private void Awake()
+        {
+            SwitchTab(TabName.LOADING);
+        }
+
         public void OnEnable()
         {
             Events.ShowTab += SwitchTab;

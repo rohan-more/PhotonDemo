@@ -50,6 +50,7 @@ namespace Core.UI
             {
                 PhotonNetwork.LoadLevel(1);
             });
+            
         }
 
         public void OnEnable()
@@ -73,7 +74,7 @@ namespace Core.UI
             Events.JoinRoom -= OnJoinRoom;
             Events.MasterLeftRoom -= OnMasterLeftRoom;
         }
-
+        
         private void OnMasterLeftRoom()
         {
             _startGameBtn.gameObject.SetActive(PhotonNetwork.IsMasterClient);
@@ -117,6 +118,11 @@ namespace Core.UI
             foreach(Transform trans in _roomListParent)
             {
                 Destroy(trans.gameObject);
+            }
+
+            if (roomList.Count > 0)
+            {
+                _showFindRoomsbtn.gameObject.SetActive(true);
             }
 
             for(int i = 0; i < roomList.Count; i++)
