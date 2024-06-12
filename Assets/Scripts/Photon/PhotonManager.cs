@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core;
 using Core.UI;
 using Photon.Pun;
 using Photon.Realtime;
@@ -38,12 +39,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         Events.OnShowTab(TabName.LOBBY);
         Debug.Log("Connected to a lobby!");
-        PhotonNetwork.NickName = "Player " + Random.Range(0, 100);
+        int number = Random.Range(0, 100);
+        PhotonNetwork.NickName = "Player " + number;
     }
 
     public void CreateRoom(string roomName)
     {
         PhotonNetwork.CreateRoom(roomName);
+        Debug.Log("Connected to a room: " + roomName);
         Events.OnShowTab(TabName.LOADING);
     }
     
@@ -69,6 +72,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
+        Debug.Log("Host " + newMasterClient.NickName + " has left room. ");
         Events.OnMasterLeftRoom();
     }
 
@@ -80,7 +84,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log(newPlayer.NickName + " has joined!");
+        Debug.Log(newPlayer.NickName + " has entered room " + PhotonNetwork.CurrentRoom + " Player ID: " + newPlayer.UserId);
         Events.OnPlayerEnteredRoom(newPlayer);
     }
     

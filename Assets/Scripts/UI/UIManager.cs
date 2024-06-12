@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Core.UI
 {
@@ -103,6 +104,18 @@ namespace Core.UI
             {
                 GameObject item = Instantiate(_playerItemUIPrefab.gameObject, _playerListParent);
                 item.GetComponent<PlayerItemUI>().Initialize(players[i]);
+                Player newPlayer = players[i];
+                Debug.Log(newPlayer.NickName + " joined " + PhotonNetwork.CurrentRoom.Name + " Player ID: " + newPlayer.UserId);
+                int number = Random.Range(0, 2);
+            
+                if (number % 2 == 0) // Randomizing player types for now
+                {
+                    RoomManager.Instance.playerList.Add(newPlayer, PlayerType.SEEKER);
+                }
+                else
+                {
+                    RoomManager.Instance.playerList.Add(newPlayer, PlayerType.HIDER);
+                }
             }
         }
         
@@ -140,7 +153,19 @@ namespace Core.UI
         {
             GameObject item = Instantiate(_playerItemUIPrefab.gameObject, _playerListParent);
             item.GetComponent<PlayerItemUI>().Initialize(newPlayer);
-            Debug.Log(newPlayer.NickName + " has entered room " + PhotonNetwork.CurrentRoom);
+            Debug.Log(newPlayer.NickName + " has entered room " + PhotonNetwork.CurrentRoom + " Player ID: " + newPlayer.UserId);
+            int number = Random.Range(0, 2);
+            
+            if (number % 2 == 0)
+            {
+                RoomManager.Instance.playerList.Add(newPlayer ,PlayerType.SEEKER);
+            }
+            else
+            {
+                RoomManager.Instance.playerList.Add(newPlayer, PlayerType.HIDER);
+            }
+            Debug.Log(newPlayer.NickName);
+            
         }
         
         private void OnJoinRoom(RoomInfo info)
