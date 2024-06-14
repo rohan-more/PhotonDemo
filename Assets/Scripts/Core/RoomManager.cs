@@ -19,7 +19,8 @@ namespace Core
         public static RoomManager Instance;
         public PhotonView _photonView;
         public Dictionary<Player, PlayerType> playerList;
-
+        public PlayerType _playerType;
+        public bool _forcePlayerType;
         void Awake()
         {
             if(Instance)
@@ -36,6 +37,7 @@ namespace Core
         public override void OnEnable()
         {
             base.OnEnable();
+            
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
@@ -49,6 +51,7 @@ namespace Core
         {
             if(scene.buildIndex == 1) // We're in the game scene
             {
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GUIDManager"), Vector3.zero, Quaternion.identity);
                 CreateController();
             }
         }
@@ -63,18 +66,35 @@ namespace Core
                 {
                     RoomManager.Instance.playerList.TryGetValue(item, out PlayerType type);
 
-                    if (type == PlayerType.SEEKER)
+                    if (_forcePlayerType)
                     {
-                        CreateSeekers();
+                        if (_playerType == PlayerType.SEEKER)
+                        {
+                            CreateSeekers();
+                        }
+                        else
+                        {
+                            CreateHider();
+                        }
                     }
                     else
                     {
-                        CreateHider();
+                        if (type == PlayerType.SEEKER)
+                        {
+                            CreateSeekers();
+                        }
+                        else
+                        {
+                            CreateHider();
+                        }
                     }
+
+        
                 }
 
                 break;
             }
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         void CreateHider()

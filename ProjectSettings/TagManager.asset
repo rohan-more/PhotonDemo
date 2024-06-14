@@ -6,6 +6,7 @@ TagManager:
   tags:
   - FP_Player
   - TP_Player
+  - Hideable
   layers:
   - Default
   - TransparentFX

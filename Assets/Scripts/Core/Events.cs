@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Core;
 using Core.UI;
 using Photon.Realtime;
+using UnityEngine;
 
 public static class Events
 {
@@ -20,6 +22,8 @@ public static class Events
     public static event Action<List<RoomInfo>> UpdateRoomList;
     
     public static event Action<Player> PlayerEnteredRoom;
+    
+    public static event Action<int, string> SelectedObjectType;
     
     public static void OnShowTab(TabName obj)
     {
@@ -59,5 +63,10 @@ public static class Events
     public static void OnMasterLeftRoom()
     {
         MasterLeftRoom?.Invoke();
+    }
+
+    public static void OnSelectedObjectType(int id, string obj)
+    {
+        SelectedObjectType?.Invoke(id, obj);
     }
 }

@@ -94,6 +94,7 @@ namespace Invector.vCharacterController
                 {
                     tpCamera.SetMainTarget(this.transform);
                     tpCamera.Init();
+                    tpCamera.gameObject.GetComponent<HiderCamera>().SetTargetPlayer();
                 }
             }
             
