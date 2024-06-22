@@ -5433,8 +5433,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14c8bab2e89074a438cb5fd645cf1546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _swappableObjectManager: {fileID: 11400000, guid: ca6f38b5358e1f14c93ab4d98a0375c6,
-    type: 2}
   _photonView: {fileID: 9162851480229478260}
   _playerType: 0
   _forcePlayerType: 1

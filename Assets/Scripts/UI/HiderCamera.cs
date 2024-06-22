@@ -42,7 +42,7 @@ public class HiderCamera : MonoBehaviour
         {
             if (hit.collider.CompareTag("Hideable"))
             {
-                Mesh newMesh = hit.collider.gameObject.GetComponent<MeshFilter>().mesh;
+                Mesh newMesh = hit.collider.gameObject.GetComponent<MeshFilter>().sharedMesh;
                 
                 string sendName = null;
                 if (newMesh.name.Contains("Sphere"))
