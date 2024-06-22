@@ -1,16 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core;
 using UnityEngine;
 
 public class MeshManager : MonoBehaviour
 {
     public static MeshManager Instance;
-    
-    private Dictionary<string, Mesh> idToMeshMap = new Dictionary<string, Mesh>();
-    public List<string> meshNames;
-    public List<Mesh> meshes;
-
+    public MeshConfig meshConfig;
     private void Awake()
     {
         if (Instance == null)
@@ -25,25 +22,30 @@ public class MeshManager : MonoBehaviour
 
     private void Start()
     {
-        CreateMeshMap();
+        meshConfig.CreateData();
+    }
+    
+    public Mesh GetMesh(MeshName meshName)
+    {
+        return meshConfig.GetMesh(meshName);
+    }
+    
+    public Material GetMaterial(MeshName meshName)
+    {
+        return meshConfig.GetMaterial(meshName);
     }
 
-    private void CreateMeshMap()
-    {
-        // Ensure the lists have the same count
-        int count = Mathf.Min(meshNames.Count, meshes.Count);
-        
-        for (int i = 0; i < count; i++)
-        {
-            idToMeshMap[meshNames[i]] = meshes[i];
-        }
-    }
     
     public Mesh GetMeshByName(string name)
     {
-
-        idToMeshMap.TryGetValue(name, out Mesh mesh);
-        return mesh;
+        Enum.TryParse(name, true, out MeshName meshName);
+        return meshConfig.GetMesh(meshName);
+    }
+    
+    public Material GetMaterialByName(string name)
+    {
+        Enum.TryParse(name, true, out MeshName meshName);
+        return meshConfig.GetMaterial(meshName);
     }
 
 }

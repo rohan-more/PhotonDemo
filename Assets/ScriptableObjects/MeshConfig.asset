@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 096f92d5fabcf484eb61153ebceda0ce, type: 3}
+  m_Name: MeshConfig
+  m_EditorClassIdentifier: 
+  meshNames: 0000000001000000020000000300000004000000
+  meshList:
+  - {fileID: 4300000, guid: 1a8449922d22bae4791e0335226fa1aa, type: 3}
+  - {fileID: 4300000, guid: 1716e599fb056014ca8f5786b3a82fcf, type: 3}
+  - {fileID: 4300000, guid: 8edf1a08abb5cb342a2a608b289c1f91, type: 3}
+  - {fileID: 4300000, guid: c7acbad2649a15647a7a4dfd8cceb5ac, type: 3}
+  - {fileID: 4300000, guid: 9bd069d17b875254f9fc1eeccdd647b4, type: 3}
+  materialList:
+  - {fileID: 2100000, guid: 58d53420af384224ea4cfee8973d18cb, type: 2}
+  - {fileID: 2100000, guid: 58d53420af384224ea4cfee8973d18cb, type: 2}
+  - {fileID: 2100000, guid: 58d53420af384224ea4cfee8973d18cb, type: 2}
+  - {fileID: 2100000, guid: 58d53420af384224ea4cfee8973d18cb, type: 2}
+  - {fileID: 2100000, guid: 58d53420af384224ea4cfee8973d18cb, type: 2}

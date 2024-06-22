@@ -19,8 +19,10 @@ namespace Core
         public static RoomManager Instance;
         public PhotonView _photonView;
         public Dictionary<Player, PlayerType> playerList;
+        private GameObject spawnPositions;
         public PlayerType _playerType;
         public bool _forcePlayerType;
+        private List<Vector3> playerPositions = new List<Vector3>();
         void Awake()
         {
             if(Instance)
@@ -49,11 +51,21 @@ namespace Core
 
         void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            if(scene.buildIndex == 1) // We're in the game scene
+            if(scene.buildIndex == 2) // We're in the game scene
             {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "GUIDManager"), Vector3.zero, Quaternion.identity);
+                GetSpawnPositions();
                 CreateController();
             }
+        }
+
+        private void GetSpawnPositions()
+        {
+            spawnPositions = GameObject.Find("PlayerSpawnPoints");
+            foreach (Transform child in spawnPositions.transform)
+            {
+                playerPositions.Add(child.transform.position);
+            }
+            
         }
         
         void CreateController()
@@ -88,10 +100,8 @@ namespace Core
                             CreateHider();
                         }
                     }
-
-        
+                    
                 }
-
                 break;
             }
             Cursor.lockState = CursorLockMode.Locked;
@@ -99,17 +109,17 @@ namespace Core
 
         void CreateHider()
         {
-            float random_x = Random.Range(0, 10);
-            Vector3 spawnpoint = new Vector3(random_x, 3.0f, 0.0f);
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TP_Player"), spawnpoint, Quaternion.identity);
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TP_Camera"), spawnpoint, Quaternion.identity);
+            int randomIndex = UnityEngine.Random.Range(0, playerPositions.Count);
+            Vector3 spawnPos = playerPositions[randomIndex];
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TP_Player"), spawnPos, Quaternion.identity);
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "TP_Camera"), spawnPos, Quaternion.identity);
         }
 
         void CreateSeekers()
         {
-            float random_x = Random.Range(0, 10);
-            Vector3 spawnpoint = new Vector3(random_x, 3.0f, 10.0f);
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FP_Player"), spawnpoint, Quaternion.identity);
+            int randomIndex = UnityEngine.Random.Range(0, playerPositions.Count);
+            Vector3 spawnPos = playerPositions[randomIndex];
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FP_Player"), spawnPos, Quaternion.identity);
         }
         
     }

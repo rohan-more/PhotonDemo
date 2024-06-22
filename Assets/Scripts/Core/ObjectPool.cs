@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
+    //BATH_TUB, CHAIR, BIRD_HOUSE, VASE, GRAIN_SACK
     public enum ObjectType {CUBE, SPHERE, CAPSULE}
     [System.Serializable]
     public class Pool

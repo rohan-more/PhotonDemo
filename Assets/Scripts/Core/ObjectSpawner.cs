@@ -20,7 +20,7 @@ public class ObjectSpawner : MonoBehaviour
 
         foreach (var item in spawnPositions)
         {
-            SpawnObjectAtRandomPosition();
+           // SpawnObjectAtRandomPosition();
         }
     }
 

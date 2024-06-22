@@ -49,7 +49,7 @@ namespace Core.UI
             
             _startGameBtn.onClick.AddListener(() =>
             {
-                PhotonNetwork.LoadLevel(1);
+                PhotonNetwork.LoadLevel(2);
             });
             
         }

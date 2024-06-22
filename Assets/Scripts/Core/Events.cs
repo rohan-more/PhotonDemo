@@ -25,6 +25,8 @@ public static class Events
     
     public static event Action<int, string> SelectedObjectType;
     
+    public static event Action<int, MeshName> SelectedObject;
+    
     public static void OnShowTab(TabName obj)
     {
         ShowTab?.Invoke(obj);
@@ -68,5 +70,10 @@ public static class Events
     public static void OnSelectedObjectType(int id, string obj)
     {
         SelectedObjectType?.Invoke(id, obj);
+    }
+
+    public static void OnSelectedObject(int arg1, MeshName arg2)
+    {
+        SelectedObject?.Invoke(arg1, arg2);
     }
 }

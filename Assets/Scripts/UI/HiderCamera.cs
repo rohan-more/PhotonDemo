@@ -12,7 +12,19 @@ public class HiderCamera : MonoBehaviour
     [SerializeField] private Camera _camera;
     public PhotonView photonView;
     private int _targetViewID;
-    
+    private Dictionary<Func<string, bool>, MeshName> meshMap;
+    private void Start()
+    {
+        meshMap = new Dictionary<Func<string, bool>, MeshName>
+        {
+            { str => str.Contains("vase"), MeshName.VASE },
+            { str => str.Contains("chair"), MeshName.CHAIR },
+            { str => str.Contains("bathtub"), MeshName.BATHTUB },
+            { str => str.Contains("sack_open"), MeshName.SACK_OPEN },
+            { str => str.Contains("bird_house"), MeshName.BIRD_HOUSE },
+        };
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -43,21 +55,16 @@ public class HiderCamera : MonoBehaviour
             if (hit.collider.CompareTag("Hideable"))
             {
                 Mesh newMesh = hit.collider.gameObject.GetComponent<MeshFilter>().sharedMesh;
-                
-                string sendName = null;
-                if (newMesh.name.Contains("Sphere"))
+
+                foreach (var condition in meshMap)
                 {
-                    sendName = "Sphere";
+                    if (!condition.Key(newMesh.name))
+                    {
+                        continue;
+                    }
+                    Events.OnSelectedObject(_targetViewID, condition.Value);
+                    break;
                 }
-                else if (newMesh.name.Contains("Cube"))
-                {
-                    sendName = "Cube";
-                }
-                else
-                {
-                    sendName = "Capsule";
-                }
-                Events.OnSelectedObjectType(_targetViewID, sendName);
             }
         }
     }
