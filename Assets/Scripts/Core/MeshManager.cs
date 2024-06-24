@@ -8,7 +8,6 @@ public class MeshManager : MonoBehaviour
 {
     public static MeshManager Instance;
     public MeshConfig meshConfig;
-    private Dictionary<string, string> meshMap = new();
     private void Awake()
     {
         if (Instance == null)

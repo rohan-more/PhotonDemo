@@ -53,6 +53,11 @@ namespace Core
         {
             if(scene.buildIndex == 2) // We're in the game scene
             {
+                if(PhotonNetwork.IsMasterClient)
+                {
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ScoreManager"), Vector3.one,
+                        Quaternion.identity);
+                }
                 GetSpawnPositions();
                 CreateController();
             }
@@ -72,37 +77,35 @@ namespace Core
         {
             List<Player> players = PhotonNetwork.PlayerList.ToList();
             Dictionary<Player, PlayerType>.KeyCollection playerKeys = RoomManager.Instance.playerList.Keys;
+
             foreach (var item in playerKeys)
             {
-                if (players.Any(t => item.NickName == t.NickName))
+                RoomManager.Instance.playerList.TryGetValue(item, out PlayerType type);
+                
+                /*if (_forcePlayerType)
                 {
-                    RoomManager.Instance.playerList.TryGetValue(item, out PlayerType type);
-
-                    if (_forcePlayerType)
+                    if (_playerType == PlayerType.SEEKER)
                     {
-                        if (_playerType == PlayerType.SEEKER)
-                        {
-                            CreateSeekers();
-                        }
-                        else
-                        {
-                            CreateHider();
-                        }
+                        CreateSeekers();
                     }
                     else
                     {
-                        if (type == PlayerType.SEEKER)
-                        {
-                            CreateSeekers();
-                        }
-                        else
-                        {
-                            CreateHider();
-                        }
+                        CreateHider();
                     }
-                    
+                }*/
+
+                if (item.IsLocal)
+                {
+                    if (type == PlayerType.SEEKER)
+                    {
+                        CreateSeekers();
+                    }
+                    else
+                    {
+                        CreateHider();
+                    }
                 }
-                break;
+                Debug.Log(item.NickName + type);
             }
             Cursor.lockState = CursorLockMode.Locked;
         }

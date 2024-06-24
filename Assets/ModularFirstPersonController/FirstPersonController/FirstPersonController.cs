@@ -142,7 +142,7 @@ public class FirstPersonController : MonoBehaviour
         if (!photonView.IsMine)
         {
             playerCamera.enabled = false;
-            playerCamera.gameObject.GetComponent<AudioListener>().enabled = false;
+            playerCamera.gameObject.SetActive(false);
         }
 
         // Set internal variables
@@ -162,6 +162,12 @@ public class FirstPersonController : MonoBehaviour
         if(lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        if (!photonView.IsMine)
+        {
+            playerCamera.enabled = false;
+            playerCamera.gameObject.SetActive(false);
         }
 
         if(crosshair)

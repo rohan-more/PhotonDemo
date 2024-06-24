@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 23697325097947614}
   - component: {fileID: -339379678657711542}
   - component: {fileID: 6603143322361709837}
+  - component: {fileID: -6141750682082060773}
   m_Layer: 0
   m_Name: Networked_BIRD_HOUSE
-  m_TagString: Untagged
+  m_TagString: Prop_Clone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,7 +104,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 6603143322361709837}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -123,3 +125,17 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!64 &-6141750682082060773
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668681844432972}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 8edf1a08abb5cb342a2a608b289c1f91, type: 3}

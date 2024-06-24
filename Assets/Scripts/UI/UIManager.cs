@@ -106,16 +106,8 @@ namespace Core.UI
                 item.GetComponent<PlayerItemUI>().Initialize(players[i]);
                 Player newPlayer = players[i];
                 Debug.Log(newPlayer.NickName + " joined " + PhotonNetwork.CurrentRoom.Name + " Player ID: " + newPlayer.UserId);
-                int number = Random.Range(0, 2);
-            
-                if (number % 2 == 0) // Randomizing player types for now
-                {
-                    RoomManager.Instance.playerList.Add(newPlayer, PlayerType.SEEKER);
-                }
-                else
-                {
-                    RoomManager.Instance.playerList.Add(newPlayer, PlayerType.HIDER);
-                }
+
+                RoomManager.Instance.playerList.Add(newPlayer, newPlayer.IsMasterClient ? PlayerType.SEEKER : PlayerType.HIDER);
             }
         }
         
@@ -138,14 +130,14 @@ namespace Core.UI
                 _showFindRoomsbtn.gameObject.SetActive(true);
             }
 
-            for(int i = 0; i < roomList.Count; i++)
+            foreach (var t in roomList)
             {
-                if(roomList[i].RemovedFromList)
+                if(t.RemovedFromList)
                 {
                     continue;
                 }
                 GameObject item = Instantiate(_roomListItemPrefab.gameObject, _roomListParent);
-                item.GetComponent<RoomItem>().Initialize(roomList[i]);
+                item.GetComponent<RoomItem>().Initialize(t);
             }
         }
 
@@ -154,18 +146,8 @@ namespace Core.UI
             GameObject item = Instantiate(_playerItemUIPrefab.gameObject, _playerListParent);
             item.GetComponent<PlayerItemUI>().Initialize(newPlayer);
             Debug.Log(newPlayer.NickName + " has entered room " + PhotonNetwork.CurrentRoom + " Player ID: " + newPlayer.UserId);
-            int number = Random.Range(0, 2);
-            
-            if (number % 2 == 0)
-            {
-                RoomManager.Instance.playerList.Add(newPlayer ,PlayerType.SEEKER);
-            }
-            else
-            {
-                RoomManager.Instance.playerList.Add(newPlayer, PlayerType.HIDER);
-            }
-            Debug.Log(newPlayer.NickName);
-            
+
+            RoomManager.Instance.playerList.Add(newPlayer, newPlayer.IsMasterClient ? PlayerType.SEEKER : PlayerType.HIDER);
         }
         
         private void OnJoinRoom(RoomInfo info)
