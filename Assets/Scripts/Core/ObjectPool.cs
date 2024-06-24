@@ -1,53 +1,107 @@
+using System;
 using System.Collections.Generic;
+using Core;
+using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ObjectPool : MonoBehaviour
 {
-    //BATH_TUB, CHAIR, BIRD_HOUSE, VASE, GRAIN_SACK
-    public enum ObjectType {CUBE, SPHERE, CAPSULE}
-    [System.Serializable]
-    public class Pool
+    public static ObjectPool Instance;
+    [SerializeField] private MeshName[] meshTypes; // Assign these in the inspector
+    [SerializeField] private int poolSize = 10; // Number of objects to pre-instantiate per type
+
+    private Dictionary<string, List<GameObject>> pools;
+    private Dictionary<string, int> currentIndex;
+
+    void Awake()
     {
-        public ObjectType tag;
-        public GameObject prefab;
-        public int size;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        meshTypes = MeshManager.Instance.meshConfig.GetMeshList();
     }
 
-    public List<Pool> pools;
-    public Dictionary<ObjectType, Queue<GameObject>> poolDictionary;
-
-    private void Awake()
+    private void OnEnable()
     {
-        poolDictionary = new Dictionary<ObjectType, Queue<GameObject>>();
+        InitializePools();
+    }
 
-        foreach (Pool pool in pools)
+    void InitializePools()
+    {
+        pools = new Dictionary<string, List<GameObject>>();
+        currentIndex = new Dictionary<string, int>();
+
+        foreach (var objectType in meshTypes)
         {
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-
-            for (int i = 0; i < pool.size; i++)
+            List<GameObject> pool = new List<GameObject>();
+            for (int i = 0; i < poolSize; i++)
             {
-                GameObject obj = Instantiate(pool.prefab);
+                GameObject obj = CreateNewPooledObject(objectType);
                 obj.SetActive(false);
-                objectPool.Enqueue(obj);
+                pool.Add(obj);
             }
-
-            poolDictionary.Add(pool.tag, objectPool);
+            pools.Add(objectType.ToString().ToLower(), pool);
+            currentIndex.Add(objectType.ToString().ToLower(), 0);
         }
     }
 
-    public GameObject GetPooledObject(ObjectType tag)
+    GameObject CreateNewPooledObject(MeshName meshName)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        // Create a new GameObject
+        GameObject newGameObject = new GameObject(meshName.ToString().ToLower());
+        newGameObject.transform.SetParent(this.transform);
+        // Add and configure the MeshFilter component
+        MeshFilter meshFilter = newGameObject.AddComponent<MeshFilter>();
+        meshFilter.mesh = MeshManager.Instance.GetMesh(meshName);
+
+        // Add and configure the MeshRenderer component
+        MeshRenderer meshRenderer = newGameObject.AddComponent<MeshRenderer>();
+        meshRenderer.material = MeshManager.Instance.GetMaterial(meshName);
+        return newGameObject;
+    }
+
+    public GameObject GetPooledObject(string objectType)
+    {
+        if (!pools.ContainsKey(objectType))
         {
-            Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+            Debug.LogError($"Object type {objectType} not found in pool.");
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+        List<GameObject> pool = pools[objectType];
+        int index = currentIndex[objectType];
 
-        objectToSpawn.SetActive(true);
-        poolDictionary[tag].Enqueue(objectToSpawn);
+        for (int i = 0; i < pool.Count; i++)
+        {
+            int poolIndex = (index + i) % pool.Count;
+            if (!pool[poolIndex].activeInHierarchy)
+            {
+                currentIndex[objectType] = poolIndex;
+                return pool[poolIndex];
+            }
+        }
 
-        return objectToSpawn;
+        // If no inactive object is found, optionally expand the pool
+        GameObject obj = CreateNewPooledObject(meshTypes[System.Array.FindIndex(meshTypes, ot => ot.ToString().ToLower() == objectType)]);
+        obj.SetActive(false);
+        pool.Add(obj);
+        return obj;
+    }
+
+    public void DeactivateAllPooledObjects()
+    {
+        foreach (var pool in pools.Values)
+        {
+            foreach (var obj in pool)
+            {
+                obj.SetActive(false);
+            }
+        }
     }
 }

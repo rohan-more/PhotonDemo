@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core;
 using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour
@@ -7,7 +8,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private Transform spawnPointHolder;
     public List<Transform> spawnPositions;  // List to hold fixed spawn positions
     public ObjectPool objectPool;  // Reference to the object pool
-    public List<ObjectPool.ObjectType> objectTags;  // Tags of objects to spawn
+    public List<MeshName> objectTags;  // Tags of objects to spawn
     public float spawnInterval = 5f;  // Time interval between spawns
     private List<Transform> availablePositions;
     private void Start()
@@ -24,7 +25,7 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnObjectAtRandomPosition()
+    /*private void SpawnObjectAtRandomPosition()
     {
         if (spawnPositions.Count == 0)
         {
@@ -44,7 +45,7 @@ public class ObjectSpawner : MonoBehaviour
 
         // Select a random object tag from the list
         int randomTagIndex = Random.Range(0, objectTags.Count);
-        ObjectPool.ObjectType tag = objectTags[randomTagIndex];
+        MeshName tag = objectTags[randomTagIndex];
 
         // Get a pooled object by tag and activate it at the chosen position
         GameObject pooledObject = objectPool.GetPooledObject(tag);
@@ -53,5 +54,5 @@ public class ObjectSpawner : MonoBehaviour
             pooledObject.transform.position = spawnPosition.position;
             pooledObject.transform.rotation = spawnPosition.rotation;
         }
-    }
+    }*/
 }

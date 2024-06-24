@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,9 +13,8 @@ namespace Core
         [SerializeField] private MeshFilter _playerMesh;
         [SerializeField] private MeshRenderer _playerMeshRenderer;
         [SerializeField] private PhotonView _photonView;
-        [SerializeField] private Mesh cube;
-        [SerializeField] private Mesh capsule;
-        [SerializeField] private Mesh sphere;
+        private string meshID;
+        public KeyCode cloneInput = KeyCode.LeftControl;
         private void OnEnable()
         {
             Events.SelectedObjectType += SwapMesh;
@@ -36,7 +36,6 @@ namespace Core
             {
                 return;
             }
-            //_playerMesh.mesh = GUIDManager.Instance.GetMeshByID(meshID);
             _playerMesh.mesh = MeshManager.Instance.GetMeshByName(meshName);
             _playerMeshRenderer.material = MeshManager.Instance.GetMaterialByName(meshName);
         }
@@ -48,10 +47,10 @@ namespace Core
             {
                 return;
             }
-            //_playerMesh.mesh = GUIDManager.Instance.GetMeshByID(meshID);
             _playerMesh.mesh = MeshManager.Instance.GetMeshByName(meshName);
             _playerMeshRenderer.material = MeshManager.Instance.GetMaterialByName(meshName);
             _photonView.RPC("RPC_PropChangeModel", RpcTarget.OthersBuffered, viewID, meshName);
+            meshID = meshName;
         }
         
         private void SwapMesh(int viewID, MeshName meshName)
@@ -60,12 +59,24 @@ namespace Core
             {
                 return;
             }
-            //_playerMesh.mesh = GUIDManager.Instance.GetMeshByID(meshID);
             _playerMesh.mesh = MeshManager.Instance.GetMesh(meshName);
             _playerMeshRenderer.material = MeshManager.Instance.GetMaterial(meshName);
             _photonView.RPC("RPC_PropChangeModel", RpcTarget.OthersBuffered, viewID, meshName.ToString().ToLower());
+            meshID = meshName.ToString();
         }
-        
+
+        public void Update()
+        {
+            if (!_photonView.IsMine)
+            {
+                return;
+            }
+            if (Input.GetKeyDown(cloneInput))
+            {
+                string meshName = "Networked_" + meshID;
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", meshName), this.transform.position, Quaternion.identity);
+            }
+        }
     }
 }
 

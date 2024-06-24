@@ -8,6 +8,7 @@ public class MeshManager : MonoBehaviour
 {
     public static MeshManager Instance;
     public MeshConfig meshConfig;
+    private Dictionary<string, string> meshMap = new();
     private void Awake()
     {
         if (Instance == null)
@@ -18,10 +19,6 @@ public class MeshManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private void Start()
-    {
         meshConfig.CreateData();
     }
     

@@ -22,6 +22,7 @@ public class HiderCamera : MonoBehaviour
             { str => str.Contains("bathtub"), MeshName.BATHTUB },
             { str => str.Contains("sack_open"), MeshName.SACK_OPEN },
             { str => str.Contains("bird_house"), MeshName.BIRD_HOUSE },
+            { str => str.Contains("barrel"), MeshName.BARREL },
         };
     }
 

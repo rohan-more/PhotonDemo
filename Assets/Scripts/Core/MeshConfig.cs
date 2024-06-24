@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace Core
 {
-    public enum MeshName {BATHTUB, SACK_OPEN, BIRD_HOUSE, CHAIR, VASE}
-   
+    public enum MeshName {BATHTUB, SACK_OPEN, BIRD_HOUSE, CHAIR, VASE, BARREL}
+    
     [CreateAssetMenu(fileName = "MeshConfig", menuName = "ScriptableObjects/MeshConfig", order = 1)] 
     public class MeshConfig : ScriptableObject
     {
@@ -18,6 +18,11 @@ namespace Core
         private Dictionary<MeshName, Mesh> nameToMeshMap = new Dictionary<MeshName, Mesh>();
         private Dictionary<MeshName, Material> nameToMaterialMap = new Dictionary<MeshName, Material>();
 
+        public MeshName[] GetMeshList()
+        {
+            return meshNames.ToArray();
+        }
+        
         public Mesh GetMesh(MeshName meshName)
         {
             nameToMeshMap.TryGetValue(meshName, out Mesh mesh);
