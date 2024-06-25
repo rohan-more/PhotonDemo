@@ -1,12 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Core;
 using Core.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Random = UnityEngine.Random;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
@@ -50,7 +46,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Events.OnShowTab(TabName.LOADING);
     }
     
-
     public override void OnJoinedRoom()
     {
         Events.OnRoomName(PhotonNetwork.CurrentRoom.Name);

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -31,17 +32,24 @@ namespace Core.UI
         
         [SerializeField] private Transform _roomListParent;
         [SerializeField] private RoomItem _roomListItemPrefab;
+        
+        private static readonly char[] chars = 
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
         private void Start()
         {
             _createLobbyBtn.onClick.AddListener(() =>
             {
                 if (_roomNameField != null)
                 {
-                    _photonManager.CreateRoom(_roomNameField.text);
+                    _photonManager.CreateRoom(GenerateRandomString(6));
                 }
             });
             
-            _showCreateLobbybtn.onClick.AddListener(() => { Events.OnShowTab(TabName.CREATE); });
+            _showCreateLobbybtn.onClick.AddListener(() =>
+            {
+                _photonManager.CreateRoom(GenerateRandomString(6));
+                //Events.OnShowTab(TabName.CREATE);
+            });
             
             _showFindRoomsbtn.onClick.AddListener(() => { Events.OnShowTab(TabName.FIND_ROOM); });
             
@@ -74,6 +82,17 @@ namespace Core.UI
             Events.PlayerEnteredRoom -= OnPlayerEnteredRoom;
             Events.JoinRoom -= OnJoinRoom;
             Events.MasterLeftRoom -= OnMasterLeftRoom;
+        }
+        
+        public static string GenerateRandomString(int length)
+        {
+            StringBuilder result = new StringBuilder(length);
+            for (int i = 0; i < length; i++)
+            {
+                result.Append(chars[UnityEngine.Random.Range(0, chars.Length)]);
+            }
+
+            return result.ToString();
         }
         
         private void OnMasterLeftRoom()

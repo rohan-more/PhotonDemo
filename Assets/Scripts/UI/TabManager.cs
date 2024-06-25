@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using DG.Tweening;
 namespace Core.UI
 {
     
@@ -10,9 +11,14 @@ namespace Core.UI
     public class TabManager : MonoBehaviour
     {
         [SerializeField] private List<Tab> tabs;
-
+        [SerializeField] private CanvasGroup panelCanvasGroup;
+        [SerializeField] private float fadeDuration = 1.0f;
         private void Awake()
         {
+            if (panelCanvasGroup == null)
+            {
+                panelCanvasGroup = GetComponent<CanvasGroup>();
+            }
             SwitchTab(TabName.LOADING);
         }
 
@@ -25,6 +31,16 @@ namespace Core.UI
         {
             Events.ShowTab -= SwitchTab;
         }
+        
+        private void FadeIn()
+        {
+            panelCanvasGroup.DOFade(1, fadeDuration).SetEase(Ease.InOutQuad);
+        }
+
+        private void FadeOut()
+        {
+            panelCanvasGroup.DOFade(0, fadeDuration).SetEase(Ease.InOutQuad);
+        }
 
 
         private void SwitchTab(TabName tab)
@@ -33,10 +49,12 @@ namespace Core.UI
             {
                 if (tab == item.Name)
                 {
+                    FadeOut();
                     item.ShowTab();
                 }
                 else
                 {
+                    FadeIn();
                     item.HideTab();
                 }
             }
