@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ public class WeaponShooter : MonoBehaviour
             {
                 int viewID = hit.transform.GetComponent<PhotonView>().ViewID;
                 Debug.Log("Hit " + hit.transform.GetComponent<PhotonView>().ViewID);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Explosion"), hit.transform.position, Quaternion.identity);
                 _photonView.RPC("RPC_DestroyProp", RpcTarget.OthersBuffered, viewID);
             }
             

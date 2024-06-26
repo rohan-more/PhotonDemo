@@ -39,6 +39,11 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - RPC_AddScore
+  - RPC_DestroyProp
+  - RPC_PropChangeModel
+  - RPC_ResetScores
+  - SyncGUID
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

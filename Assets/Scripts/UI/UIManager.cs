@@ -126,7 +126,7 @@ namespace Core.UI
                 Player newPlayer = players[i];
                 Debug.Log(newPlayer.NickName + " joined " + PhotonNetwork.CurrentRoom.Name + " Player ID: " + newPlayer.UserId);
 
-                RoomManager.Instance.playerList.Add(newPlayer, newPlayer.IsMasterClient ? PlayerType.SEEKER : PlayerType.HIDER);
+                RoomManager.Instance.playerList.Add(newPlayer, newPlayer.IsMasterClient ? PlayerType.HUNTER : PlayerType.PROP);
             }
         }
         
@@ -166,7 +166,7 @@ namespace Core.UI
             item.GetComponent<PlayerItemUI>().Initialize(newPlayer);
             Debug.Log(newPlayer.NickName + " has entered room " + PhotonNetwork.CurrentRoom + " Player ID: " + newPlayer.UserId);
 
-            RoomManager.Instance.playerList.Add(newPlayer, newPlayer.IsMasterClient ? PlayerType.SEEKER : PlayerType.HIDER);
+            RoomManager.Instance.playerList.Add(newPlayer, newPlayer.IsMasterClient ? PlayerType.HUNTER : PlayerType.PROP);
         }
         
         private void OnJoinRoom(RoomInfo info)

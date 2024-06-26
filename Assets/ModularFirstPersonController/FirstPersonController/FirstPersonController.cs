@@ -19,6 +19,8 @@ public class FirstPersonController : MonoBehaviour
 {
     public Rigidbody rb;
     public PhotonView photonView;
+    public GameObject crosshairUI;
+    public AudioListener audioListener;
     #region Camera Movement Variables
 
     public Camera playerCamera;
@@ -142,7 +144,12 @@ public class FirstPersonController : MonoBehaviour
         if (!photonView.IsMine)
         {
             playerCamera.enabled = false;
-            playerCamera.gameObject.SetActive(false);
+            audioListener.enabled = false;
+            crosshairUI.SetActive(false);
+            /*WeaponShooter weaponShooter = playerCamera.GetComponent<WeaponShooter>();
+            weaponShooter.HideCrosshairUI();
+            playerCamera.GetComponent<AudioListener>().enabled = false;*/
+            //playerCamera.gameObject.SetActive(false);
         }
 
         // Set internal variables
@@ -167,7 +174,12 @@ public class FirstPersonController : MonoBehaviour
         if (!photonView.IsMine)
         {
             playerCamera.enabled = false;
-            playerCamera.gameObject.SetActive(false);
+            audioListener.enabled = false;
+            crosshairUI.SetActive(false);
+            /*WeaponShooter weaponShooter = playerCamera.GetComponent<WeaponShooter>();
+            weaponShooter.HideCrosshairUI();
+            playerCamera.GetComponent<AudioListener>().enabled = false;*/
+            //playerCamera.gameObject.SetActive(false);
         }
 
         if(crosshair)
@@ -216,6 +228,17 @@ public class FirstPersonController : MonoBehaviour
         }
 
         #endregion
+    }
+    
+    [PunRPC]
+    void RPC_DestroyProp(int targetPropID)
+    {
+        PhotonView photonView = PhotonView.Find(targetPropID);
+        if (photonView != null)
+        {
+            Debug.Log("Destroying " + gameObject.name + " ID: " + photonView.ViewID);
+            PhotonNetwork.Destroy(photonView.gameObject);
+        }
     }
     
     void IncludeLayerInCullingMask(Camera camera, string layerName)
@@ -591,6 +614,8 @@ public class FirstPersonController : MonoBehaviour
         EditorGUILayout.Space();
         fpc.rb = (Rigidbody)EditorGUILayout.ObjectField(new GUIContent("Rigidbody", "Rigidbody attached to the controller."), fpc.rb, typeof(Rigidbody), true);
         fpc.photonView = (PhotonView)EditorGUILayout.ObjectField(new GUIContent("PhotonView", "PhotonView attached to the controller."), fpc.photonView, typeof(PhotonView), true);
+        fpc.crosshairUI = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Crosshair", "Crosshair UI attached to the controller."), fpc.crosshairUI, typeof(GameObject), true);
+        fpc.audioListener = (AudioListener)EditorGUILayout.ObjectField(new GUIContent("Camera AudioListener", "AudioListener attached to the controller."), fpc.audioListener, typeof(AudioListener), true);
         #region Camera Setup
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);

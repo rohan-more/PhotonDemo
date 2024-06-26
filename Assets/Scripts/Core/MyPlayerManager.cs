@@ -37,7 +37,7 @@ public class MyPlayerManager : MonoBehaviour
             {
                 RoomManager.Instance.playerList.TryGetValue(item, out PlayerType type);
 
-                if (type == PlayerType.SEEKER)
+                if (type == PlayerType.HUNTER)
                 {
                     CreateSeekers();
                 }

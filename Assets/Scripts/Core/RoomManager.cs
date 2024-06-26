@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 namespace Core
 {
     
-    public enum PlayerType {HIDER, SEEKER}
+    public enum PlayerType {PROP, HUNTER}
     
     public class RoomManager : MonoBehaviourPunCallbacks
     {
@@ -96,7 +96,7 @@ namespace Core
 
                 if (item.IsLocal)
                 {
-                    if (type == PlayerType.SEEKER)
+                    if (type == PlayerType.HUNTER)
                     {
                         CreateSeekers();
                     }
@@ -105,7 +105,6 @@ namespace Core
                         CreateHider();
                     }
                 }
-                Debug.Log(item.NickName + type);
             }
             Cursor.lockState = CursorLockMode.Locked;
         }
