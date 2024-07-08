@@ -140,16 +140,11 @@ public class FirstPersonController : MonoBehaviour
         //rb = GetComponent<Rigidbody>();
 
         crosshairObject = GetComponentInChildren<Image>();
-        
         if (!photonView.IsMine)
         {
             playerCamera.enabled = false;
             audioListener.enabled = false;
             crosshairUI.SetActive(false);
-            /*WeaponShooter weaponShooter = playerCamera.GetComponent<WeaponShooter>();
-            weaponShooter.HideCrosshairUI();
-            playerCamera.GetComponent<AudioListener>().enabled = false;*/
-            //playerCamera.gameObject.SetActive(false);
         }
 
         // Set internal variables
@@ -176,10 +171,16 @@ public class FirstPersonController : MonoBehaviour
             playerCamera.enabled = false;
             audioListener.enabled = false;
             crosshairUI.SetActive(false);
-            /*WeaponShooter weaponShooter = playerCamera.GetComponent<WeaponShooter>();
-            weaponShooter.HideCrosshairUI();
-            playerCamera.GetComponent<AudioListener>().enabled = false;*/
-            //playerCamera.gameObject.SetActive(false);
+        }
+        
+        if (photonView.IsMine)
+        {
+            MinimapCameraController camera =
+                GameObject.FindGameObjectWithTag("MinimapCamera").GetComponent<MinimapCameraController>();
+            if (camera != null)
+            {
+                camera.playerTransform = this.transform;
+            }
         }
 
         if(crosshair)

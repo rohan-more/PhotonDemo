@@ -81,22 +81,9 @@ namespace Core
             foreach (var item in playerKeys)
             {
                 RoomManager.Instance.playerList.TryGetValue(item, out PlayerType type);
-                
-                /*if (_forcePlayerType)
-                {
-                    if (_playerType == PlayerType.SEEKER)
-                    {
-                        CreateSeekers();
-                    }
-                    else
-                    {
-                        CreateHider();
-                    }
-                }*/
-
                 if (item.IsLocal)
                 {
-                    if (type == PlayerType.HUNTER)
+                    if (type != PlayerType.HUNTER)
                     {
                         CreateSeekers();
                     }

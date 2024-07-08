@@ -28,7 +28,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: 
+  DevRegion: in
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -44,6 +44,8 @@ MonoBehaviour:
   - RPC_PropChangeModel
   - RPC_ResetScores
   - SyncGUID
+  - RPC_RecieveDamage
+  - RPC_SetPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 0
-  DevRegionSetOnce: 0
+  DevRegionSetOnce: 1

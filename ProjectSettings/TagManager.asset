@@ -8,6 +8,7 @@ TagManager:
   - TP_Player
   - Hideable
   - Prop_Clone
+  - MinimapCamera
   layers:
   - Default
   - TransparentFX

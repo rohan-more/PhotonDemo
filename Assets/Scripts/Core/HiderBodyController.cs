@@ -13,8 +13,24 @@ namespace Core
         [SerializeField] private MeshFilter _playerMesh;
         [SerializeField] private MeshRenderer _playerMeshRenderer;
         [SerializeField] private PhotonView _photonView;
+        [SerializeField] private HealthView _healthView;
         private string meshID;
         public KeyCode cloneInput = KeyCode.LeftControl;
+
+        private void Start()
+        {
+            if (_photonView.IsMine)
+            {
+                MinimapCameraController camera =
+                    GameObject.FindGameObjectWithTag("MinimapCamera").GetComponent<MinimapCameraController>();
+                if (camera != null)
+                {
+                    camera.playerTransform = this.transform;
+                }
+                _healthView = GameObject.FindObjectOfType<HealthView>();
+            }
+        }
+
         private void OnEnable()
         {
             Events.SelectedObjectType += SwapMesh;
@@ -38,6 +54,17 @@ namespace Core
             }
             _playerMesh.mesh = MeshManager.Instance.GetMeshByName(meshName);
             _playerMeshRenderer.material = MeshManager.Instance.GetMaterialByName(meshName);
+        }
+        
+        [PunRPC]
+        public void RPC_RecieveDamage(string playerName, int damageAmount)
+        {
+            Debug.Log("Photon Name: " + _photonView.Controller.NickName);
+            Debug.Log("Player Name: " + playerName);
+            if(_photonView.Controller.NickName == playerName)
+            {
+                _healthView.TakeDamage(damageAmount);
+            }
         }
         
 
@@ -65,6 +92,11 @@ namespace Core
             meshID = meshName.ToString();
         }
 
+        public void SendDamage(string playerName)
+        {
+            _photonView.RPC("RPC_RecieveDamage", RpcTarget.Others, playerName, 1);
+        }
+
         public void Update()
         {
             if (!_photonView.IsMine)
@@ -73,6 +105,11 @@ namespace Core
             }
             if (Input.GetKeyDown(cloneInput))
             {
+                if (string.IsNullOrEmpty(meshID))
+                {
+                    Debug.Log("No mesh equipped yet");
+                    return;
+                }
                 string meshName = "Networked_" + meshID;
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", meshName), this.transform.position, Quaternion.identity);
             }
