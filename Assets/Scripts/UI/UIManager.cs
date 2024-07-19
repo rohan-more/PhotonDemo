@@ -33,8 +33,7 @@ namespace Core.UI
         [SerializeField] private Transform _roomListParent;
         [SerializeField] private RoomItem _roomListItemPrefab;
         
-        private static readonly char[] chars = 
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
+        private static readonly char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
         private void Start()
         {
             _createLobbyBtn.onClick.AddListener(() =>
@@ -125,8 +124,9 @@ namespace Core.UI
                 item.GetComponent<PlayerItemUI>().Initialize(players[i]);
                 Player newPlayer = players[i];
                 Debug.Log(newPlayer.NickName + " joined " + PhotonNetwork.CurrentRoom.Name + " Player ID: " + newPlayer.UserId);
-
-                RoomManager.Instance.playerList.Add(newPlayer, newPlayer.IsMasterClient ? PlayerType.HUNTER : PlayerType.PROP);
+                MyPlayer player = new MyPlayer(newPlayer.NickName, newPlayer.ActorNumber, newPlayer.IsLocal);
+                player.Type = newPlayer.IsMasterClient ? PlayerType.PROP : PlayerType.HUNTER;
+                RoomManager.Instance.PlayerList.Add(player, player.Type);
             }
         }
         
@@ -165,8 +165,10 @@ namespace Core.UI
             GameObject item = Instantiate(_playerItemUIPrefab.gameObject, _playerListParent);
             item.GetComponent<PlayerItemUI>().Initialize(newPlayer);
             Debug.Log(newPlayer.NickName + " has entered room " + PhotonNetwork.CurrentRoom + " Player ID: " + newPlayer.UserId);
-
-            RoomManager.Instance.playerList.Add(newPlayer, newPlayer.IsMasterClient ? PlayerType.HUNTER : PlayerType.PROP);
+            
+            MyPlayer player = new MyPlayer(newPlayer.NickName, newPlayer.ActorNumber, newPlayer.IsLocal);
+            player.Type = newPlayer.IsMasterClient ? PlayerType.PROP : PlayerType.HUNTER;
+            RoomManager.Instance.PlayerList.Add(player, player.Type);
         }
         
         private void OnJoinRoom(RoomInfo info)

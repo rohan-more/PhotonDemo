@@ -13,6 +13,11 @@ public class HiderCamera : MonoBehaviour
     public PhotonView photonView;
     private int _targetViewID;
     private Dictionary<Func<string, bool>, MeshName> meshMap;
+
+    public string shaderProperty = "_Thickness"; 
+    public float hideValue = 0f;
+    public float showValue = 0.005f;
+    private List<Renderer> renderers = new();
     private void Start()
     {
         meshMap = new Dictionary<Func<string, bool>, MeshName>
@@ -28,12 +33,38 @@ public class HiderCamera : MonoBehaviour
 
     void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            if (hit.collider.CompareTag("Hideable"))
+            {
+                Renderer renderer = hit.collider.GetComponent<Renderer>();
+                renderers.Add(renderer);
+
+                foreach (var item in renderers)
+                {
+                    ToggleShaderProperty(item, showValue);
+                }
+            }
+            else
+            {
+                foreach (var item in renderers)
+                {
+                    ToggleShaderProperty(item, hideValue);
+                }
+                renderers.Clear();
+            }
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
-            if (!photonView.IsMine)
-            {
-                return;
-            }
             DetectObject();
         }
     }
@@ -44,6 +75,22 @@ public class HiderCamera : MonoBehaviour
         {
             _targetPlayer = _tpCamera.target;
             _targetViewID = _targetPlayer.gameObject.GetPhotonView().ViewID;
+        }
+    }
+    
+    void ToggleShaderProperty(Renderer renderer, float value)
+    {
+        if (renderer == null)
+        {
+            return;
+        }
+        foreach (Material material in renderer.materials)
+        {
+            if (material.HasProperty(shaderProperty))
+            {
+                float newValue = value;
+                material.SetFloat(shaderProperty, newValue);
+            }
         }
     }
 
@@ -63,6 +110,7 @@ public class HiderCamera : MonoBehaviour
                     {
                         continue;
                     }
+
                     Events.OnSelectedObject(_targetViewID, condition.Value);
                     break;
                 }

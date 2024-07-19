@@ -30,12 +30,12 @@ public class MyPlayerManager : MonoBehaviour
     void CreateController()
     {
         List<Player> players = PhotonNetwork.PlayerList.ToList();
-        Dictionary<Player, PlayerType>.KeyCollection playerKeys = RoomManager.Instance.playerList.Keys;
+        Dictionary<MyPlayer, PlayerType>.KeyCollection playerKeys = RoomManager.Instance.PlayerList.Keys;
         foreach (var item in playerKeys)
         {
             if (players.Any(t => item.NickName == t.NickName))
             {
-                RoomManager.Instance.playerList.TryGetValue(item, out PlayerType type);
+                RoomManager.Instance.PlayerList.TryGetValue(item, out PlayerType type);
 
                 if (type == PlayerType.HUNTER)
                 {

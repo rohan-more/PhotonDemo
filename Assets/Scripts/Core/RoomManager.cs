@@ -18,7 +18,7 @@ namespace Core
     {
         public static RoomManager Instance;
         public PhotonView _photonView;
-        public Dictionary<Player, PlayerType> playerList;
+        public Dictionary<MyPlayer, PlayerType> PlayerList;
         private GameObject spawnPositions;
         public PlayerType _playerType;
         public bool _forcePlayerType;
@@ -33,7 +33,12 @@ namespace Core
             DontDestroyOnLoad(gameObject);
             Instance = this;
 
-            playerList = new Dictionary<Player, PlayerType>();
+            PlayerList = new Dictionary<MyPlayer, PlayerType>();
+        }
+
+        public PlayerType GetPlayerType(string playerName)
+        {
+            return PlayerList.Keys.Where(player => player.NickName == playerName).Select(player => player.Type).FirstOrDefault();
         }
 
         public override void OnEnable()
@@ -76,14 +81,14 @@ namespace Core
         void CreateController()
         {
             List<Player> players = PhotonNetwork.PlayerList.ToList();
-            Dictionary<Player, PlayerType>.KeyCollection playerKeys = RoomManager.Instance.playerList.Keys;
+            Dictionary<MyPlayer, PlayerType>.KeyCollection playerKeys = RoomManager.Instance.PlayerList.Keys;
 
             foreach (var item in playerKeys)
             {
-                RoomManager.Instance.playerList.TryGetValue(item, out PlayerType type);
+                RoomManager.Instance.PlayerList.TryGetValue(item, out PlayerType type);
                 if (item.IsLocal)
                 {
-                    if (type != PlayerType.HUNTER)
+                    if (type != PlayerType.PROP)
                     {
                         CreateSeekers();
                     }

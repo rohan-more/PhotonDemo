@@ -189,6 +189,9 @@ MonoBehaviour:
   _tpCamera: {fileID: 882153438555521378}
   _camera: {fileID: 882153438555521380}
   photonView: {fileID: 6791017832712831775}
+  shaderProperty: Thickness
+  propertyValue1: 0
+  propertyValue2: 0.005
 --- !u!114 &1365216940983827638
 MonoBehaviour:
   m_ObjectHideFlags: 0

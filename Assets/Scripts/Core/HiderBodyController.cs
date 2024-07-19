@@ -28,6 +28,7 @@ namespace Core
                     camera.playerTransform = this.transform;
                 }
                 _healthView = GameObject.FindObjectOfType<HealthView>();
+    
             }
         }
 
