@@ -88,7 +88,7 @@ namespace Core
                 RoomManager.Instance.PlayerList.TryGetValue(item, out PlayerType type);
                 if (item.IsLocal)
                 {
-                    if (type != PlayerType.PROP)
+                    if (item.Type != PlayerType.PROP)
                     {
                         CreateSeekers();
                     }

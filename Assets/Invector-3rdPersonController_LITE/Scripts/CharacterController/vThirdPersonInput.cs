@@ -117,8 +117,11 @@ namespace Invector.vCharacterController
 
         public virtual void MoveInput()
         {
-            cc.input.x = Input.GetAxis(horizontalInput);
-            cc.input.z = Input.GetAxis(verticallInput);
+            if (!Input.GetKey(KeyCode.Tab))
+            {
+                cc.input.x = Input.GetAxis(horizontalInput);
+                cc.input.z = Input.GetAxis(verticallInput);
+            }
         }
 
         protected virtual void CameraInput()

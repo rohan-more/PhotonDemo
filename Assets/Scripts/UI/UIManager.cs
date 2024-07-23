@@ -32,7 +32,9 @@ namespace Core.UI
         
         [SerializeField] private Transform _roomListParent;
         [SerializeField] private RoomItem _roomListItemPrefab;
-        
+        [SerializeField] private Slider _roleSlider;
+        [SerializeField] private Image _hunterImage, _propImage;
+        [SerializeField] private PlayerType _roleType;
         private static readonly char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
         private void Start()
         {
@@ -49,6 +51,8 @@ namespace Core.UI
                 _photonManager.CreateRoom(GenerateRandomString(6));
                 //Events.OnShowTab(TabName.CREATE);
             });
+
+            _roleSlider.onValueChanged.AddListener(OnSliderValueChanged);
             
             _showFindRoomsbtn.onClick.AddListener(() => { Events.OnShowTab(TabName.FIND_ROOM); });
             
@@ -59,6 +63,32 @@ namespace Core.UI
                 PhotonNetwork.LoadLevel(2);
             });
             
+        }
+        
+        void OnSliderValueChanged(float value)
+        {
+            ApplySelectedRole();
+        }
+
+        void ApplySelectedRole()
+        {
+            if (_roleSlider.value == 0)
+            {
+                _roleType = PlayerType.HUNTER;
+                Color currentColor = _propImage.color;
+                _propImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, 0.35f);
+                Color selectedColor = _hunterImage.color;
+                _hunterImage.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, 1f);
+            }
+            else
+            {
+                _roleType = PlayerType.PROP;
+                Color currentColor = _hunterImage.color;
+                _hunterImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, 0.35f);
+                Color selectedColor = _propImage.color;
+                _propImage.color = new Color(selectedColor.r, selectedColor.g, selectedColor.b, 1f);
+            }
+            SetPlayerRole();
         }
 
         public void OnEnable()
@@ -83,7 +113,7 @@ namespace Core.UI
             Events.MasterLeftRoom -= OnMasterLeftRoom;
         }
         
-        public static string GenerateRandomString(int length)
+        private static string GenerateRandomString(int length)
         {
             StringBuilder result = new StringBuilder(length);
             for (int i = 0; i < length; i++)
@@ -101,7 +131,7 @@ namespace Core.UI
 
         private void UpdateRoomName(string roomName)
         {
-            _roomNameText.text = roomName;
+            //_roomNameText.text = roomName;
         }
         
         private void ShowRoomCreationFailure(string errorMsg)
@@ -125,8 +155,19 @@ namespace Core.UI
                 Player newPlayer = players[i];
                 Debug.Log(newPlayer.NickName + " joined " + PhotonNetwork.CurrentRoom.Name + " Player ID: " + newPlayer.UserId);
                 MyPlayer player = new MyPlayer(newPlayer.NickName, newPlayer.ActorNumber, newPlayer.IsLocal);
-                player.Type = newPlayer.IsMasterClient ? PlayerType.PROP : PlayerType.HUNTER;
+                player.Type = PlayerType.HUNTER;
                 RoomManager.Instance.PlayerList.Add(player, player.Type);
+            }
+        }
+
+        private void SetPlayerRole()
+        {
+            foreach (var item in RoomManager.Instance.PlayerList)
+            {
+                if (item.Key.IsLocal)
+                {
+                    item.Key.Type = _roleType;
+                }
             }
         }
         
@@ -167,7 +208,7 @@ namespace Core.UI
             Debug.Log(newPlayer.NickName + " has entered room " + PhotonNetwork.CurrentRoom + " Player ID: " + newPlayer.UserId);
             
             MyPlayer player = new MyPlayer(newPlayer.NickName, newPlayer.ActorNumber, newPlayer.IsLocal);
-            player.Type = newPlayer.IsMasterClient ? PlayerType.PROP : PlayerType.HUNTER;
+            player.Type = PlayerType.HUNTER;
             RoomManager.Instance.PlayerList.Add(player, player.Type);
         }
         
